@@ -33,6 +33,11 @@
         const [Phones, setPhones] = React.useState("");
         const [Emails, setEmails] = React.useState("");
         const [Contacts, setContacts] = React.useState([]);
+        const [EditIndex, setEditIndex] = React.useState(null);
+
+        const NameInputRef = React.useRef(null);
+        const PhoneInputRef = React.useRef(null);
+        const EmailInputRef = React.useRef(null);
 
         function onChangeName(e) {
           setNames(e.target.value);
@@ -47,17 +52,23 @@
         }
 
         function OnClickButton() {
-          if (Names && Phones && Emails) {
+          if (EditIndex !== null) {
+            const UpdateContacts = Contacts.map((contact, i) =>
+              i === EditIndex
+                ? { name: Names, phone: Phones, email: Emails }
+                : contact
+            );
+            setContacts(UpdateContacts);
+            setEditIndex(null);
+          } else {
             setContacts([
               ...Contacts,
               { name: Names, phone: Phones, email: Emails },
             ]);
-            setNames("");
-            setPhones("");
-            setEmails("");
-          } else {
-            alert("please isi bidang!");
           }
+          setNames("");
+          setPhones("");
+          setEmails("");
         }
 
         function OnClickContacts(index) {
@@ -66,7 +77,13 @@
         }
 
         function onEditClick(index) {
-          alert("test");
+          const contactToEdit = Contacts[index];
+          setNames(contactToEdit.Names);
+          setNames(contactToEdit.Phones);
+          setNames(contactToEdit.Emails);
+          setEditIndex(index);
+
+          NameInputRef.current.focus();
         }
 
         return (
@@ -87,6 +104,7 @@
                     placeholder="Name"
                     onChange={onChangeName}
                     value={Names}
+                    ref={NameInputRef}
                   />
                 </div>
                 <div class="col-sm">
@@ -96,6 +114,7 @@
                     placeholder="Telp"
                     onChange={onChangePhone}
                     value={Phones}
+                    ref={PhoneInputRef}
                   />
                 </div>
                 <div class="col-sm">
@@ -105,11 +124,13 @@
                     placeholder="Email"
                     onChange={onChangeEmail}
                     value={Emails}
+                    ref={EmailInputRef}
                   />
                 </div>
                 <div class="col-sm">
                   <button class="btn btn-primary w-100" onClick={OnClickButton}>
-                    <i class="bi bi-plus"></i>Add
+                    <i class="bi bi-plus"></i>
+                    {EditIndex !== null ? "Save" : "Add"}
                   </button>
                 </div>
               </div>
