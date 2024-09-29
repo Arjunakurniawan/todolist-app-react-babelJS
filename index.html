@@ -30,7 +30,7 @@
 
       function TodoListApp() {
         const [Names, setNames] = React.useState("");
-        const [Phones, setPhones] = React.useState(0);
+        const [Phones, setPhones] = React.useState("");
         const [Emails, setEmails] = React.useState("");
         const [Contacts, setContacts] = React.useState([]);
 
@@ -39,7 +39,7 @@
         }
 
         function onChangePhone(e) {
-          setPhones(parseInt(e.target.value));
+          setPhones(e.target.value);
         }
 
         function onChangeEmail(e) {
@@ -85,7 +85,7 @@
                     type="number"
                     class="form-control"
                     placeholder="Telp"
-                    onChangePhone={onChangePhone}
+                    onChange={onChangePhone}
                     value={Phones}
                   />
                 </div>
@@ -106,7 +106,7 @@
               </div>
 
               <h3 class="text-center mt-5">Contact List</h3>
-              <table class="table mt-5">
+              <table class="table table-hover mt-5">
                 <thead>
                   <tr>
                     <th scope="col">
