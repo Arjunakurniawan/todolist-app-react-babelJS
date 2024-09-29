@@ -60,6 +60,15 @@
           }
         }
 
+        function OnClickContacts(index) {
+          const UpdateContacts = Contacts.filter((_, i) => i !== index);
+          setContacts(UpdateContacts);
+        }
+
+        function onEditClick(index) {
+          alert("test");
+        }
+
         return (
           <>
             <div class="container">
@@ -118,6 +127,7 @@
                     <th scope="col">
                       <i class="bi bi-envelope-fill mr-2"></i>Email
                     </th>
+                    <th scope="col">Action</th>
                   </tr>
                 </thead>
 
@@ -127,6 +137,22 @@
                       <td>{contact.name}</td>
                       <td>{contact.phone}</td>
                       <td>{contact.email}</td>
+                      <td>
+                        <button
+                          class="btn btn-primary btn-sm mr-2"
+                          onClick={() => onEditClick(index)}
+                        >
+                          <i class="bi bi-pencil-square pr-1"></i>
+                          Edit
+                        </button>
+                        <button
+                          class="btn btn-danger btn-sm"
+                          onClick={() => OnClickContacts(index)}
+                        >
+                          <i class="bi bi-trash-fill pr-1"></i>
+                          Delete
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
