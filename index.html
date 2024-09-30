@@ -51,14 +51,16 @@
           setEmails(e.target.value);
         }
 
-        function OnClickButton() {
-          if (EditIndex !== null) {
-            const UpdateContacts = Contacts.map((contact, i) =>
+        function RenderUI() {
+          if (!Names || !Phones || !Emails) {
+            alert("harap isi bidang ini");
+          } else if (EditIndex !== null) {
+            const EditContacts = Contacts.map((contact, i) =>
               i === EditIndex
                 ? { name: Names, phone: Phones, email: Emails }
                 : contact
             );
-            setContacts(UpdateContacts);
+            setContacts(EditContacts);
             setEditIndex(null);
           } else {
             setContacts([
@@ -66,6 +68,10 @@
               { name: Names, phone: Phones, email: Emails },
             ]);
           }
+        }
+
+        function OnClickButton() {
+          RenderUI();
           setNames("");
           setPhones("");
           setEmails("");
