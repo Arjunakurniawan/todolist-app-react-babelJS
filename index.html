@@ -29,12 +29,15 @@
       const root = document.getElementById("root");
 
       function TodoListApp() {
+        // using useState is more practical and faster
         const [Names, setNames] = React.useState("");
         const [Phones, setPhones] = React.useState("");
         const [Emails, setEmails] = React.useState("");
         const [Contacts, setContacts] = React.useState([]);
         const [EditIndex, setEditIndex] = React.useState(null);
+        const [ShowContactList, setShowContactList] = React.useState(false);
 
+        // useRef replace when we do DOM in javascript
         const NameInputRef = React.useRef(null);
         const PhoneInputRef = React.useRef(null);
         const EmailInputRef = React.useRef(null);
@@ -52,6 +55,7 @@
         }
 
         function RenderUI() {
+          setShowContactList(true);
           if (!Names || !Phones || !Emails) {
             alert("harap isi bidang ini");
           } else if (EditIndex !== null) {
@@ -141,49 +145,53 @@
                 </div>
               </div>
 
-              <h3 class="text-center mt-5">Contact List</h3>
-              <table class="table table-hover mt-5">
-                <thead>
-                  <tr>
-                    <th scope="col">
-                      <i class="bi bi-person-fill mr-2"></i>Name
-                    </th>
-                    <th scope="col">
-                      <i class="bi bi-telephone-fill mr-2"></i>Telp
-                    </th>
-                    <th scope="col">
-                      <i class="bi bi-envelope-fill mr-2"></i>Email
-                    </th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
+              {ShowContactList && (
+                <>
+                  <h3 class="text-center mt-5">Contact List</h3>
+                  <table class="table table-hover mt-5">
+                    <thead>
+                      <tr>
+                        <th scope="col">
+                          <i class="bi bi-person-fill mr-2"></i>Name
+                        </th>
+                        <th scope="col">
+                          <i class="bi bi-telephone-fill mr-2"></i>Telp
+                        </th>
+                        <th scope="col">
+                          <i class="bi bi-envelope-fill mr-2"></i>Email
+                        </th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
 
-                <tbody>
-                  {Contacts.map((contact, index) => (
-                    <tr key={index}>
-                      <td>{contact.name}</td>
-                      <td>{contact.phone}</td>
-                      <td>{contact.email}</td>
-                      <td>
-                        <button
-                          class="btn btn-primary btn-sm mr-2"
-                          onClick={() => onEditClick(index)}
-                        >
-                          <i class="bi bi-pencil-square pr-1"></i>
-                          Edit
-                        </button>
-                        <button
-                          class="btn btn-danger btn-sm"
-                          onClick={() => OnClickContacts(index)}
-                        >
-                          <i class="bi bi-trash-fill pr-1"></i>
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                    <tbody>
+                      {Contacts.map((contact, index) => (
+                        <tr key={index}>
+                          <td>{contact.name}</td>
+                          <td>{contact.phone}</td>
+                          <td>{contact.email}</td>
+                          <td>
+                            <button
+                              class="btn btn-primary btn-sm mr-2"
+                              onClick={() => onEditClick(index)}
+                            >
+                              <i class="bi bi-pencil-square pr-1"></i>
+                              Edit
+                            </button>
+                            <button
+                              class="btn btn-danger btn-sm"
+                              onClick={() => OnClickContacts(index)}
+                            >
+                              <i class="bi bi-trash-fill pr-1"></i>
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </>
+              )}
             </div>
           </>
         );
