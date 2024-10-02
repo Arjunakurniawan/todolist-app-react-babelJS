@@ -36,20 +36,35 @@
         const [Contacts, setContacts] = React.useState([]);
         const [EditIndex, setEditIndex] = React.useState(null);
         const [ShowContactList, setShowContactList] = React.useState(false);
-        const [SearchContacts, setSearchContacts] = React.useState("");
+        // const [SearchContacts, setSearchContacts] = React.useState("");
 
         // useRef replace when we do DOM in javascript
         const NameInputRef = React.useRef(null);
         const PhoneInputRef = React.useRef(null);
         const EmailInputRef = React.useRef(null);
 
-        // handle search
-        const filteredContact = Contacts.filter(
-          (contact) =>
-            contact.name.toLowerCase().includes(SearchContacts.toLowerCase()) ||
-            contact.Phone.includes(SearchContacts) ||
-            Contact.Email.toLowerCase().includes(SearchContacts.toLowerCase())
-        );
+        // save to localStorage using method useEffect
+        React.useEffect(() => {
+          const storageContacts = localStorage.getItem("contacts-list");
+          if (storageContacts) {
+            setContacts(JSON.parse(storageContacts));
+            setShowContactList(true);
+          }
+        }, []);
+
+        React.useEffect(() => {
+          localStorage.setItem("contacts-list", JSON.stringify(Contacts));
+        }, [Contacts]);
+
+        // // handle search
+        // const filteredContacts = Contacts.filter(
+        //   (contact) =>
+        //     contact.Names.toLowerCase().includes(
+        //       SearchContacts.toLowerCase()
+        //     ) ||
+        //     contact.Phones.includes(SearchContacts) ||
+        //     contact.Emails.toLowerCase().includes(SearchContacts.toLowerCase())
+        // );
 
         function onChangeName(e) {
           setNames(e.target.value);
@@ -63,9 +78,9 @@
           setEmails(e.target.value);
         }
 
-        function onSearchContacts(e) {
-          setContacts(e.target.value);
-        }
+        // function onSearchContacts(e) {
+        //   setContacts(e.target.value);
+        // }
 
         function RenderUI() {
           setShowContactList(true);
@@ -80,10 +95,8 @@
             setContacts(EditContacts);
             setEditIndex(null);
           } else {
-            setContacts([
-              ...Contacts,
-              { name: Names, phone: Phones, email: Emails },
-            ]);
+            const newContact = { name: Names, phone: Phones, email: Emails };
+            setContacts([...Contacts, newContact]);
           }
         }
 
@@ -118,8 +131,8 @@
                 type="text"
                 class="form-control mb-3 w-100"
                 placeholder="Search..."
-                value={SearchContacts}
-                onChange={onSearchContacts}
+                // value={SearchContacts}
+                // onChange={onSearchContacts}
               />
               <div class="row">
                 <div class="col-sm">
