@@ -36,11 +36,20 @@
         const [Contacts, setContacts] = React.useState([]);
         const [EditIndex, setEditIndex] = React.useState(null);
         const [ShowContactList, setShowContactList] = React.useState(false);
+        const [SearchContacts, setSearchContacts] = React.useState("");
 
         // useRef replace when we do DOM in javascript
         const NameInputRef = React.useRef(null);
         const PhoneInputRef = React.useRef(null);
         const EmailInputRef = React.useRef(null);
+
+        // handle search
+        const filteredContact = Contacts.filter(
+          (contact) =>
+            contact.name.toLowerCase().includes(SearchContacts.toLowerCase()) ||
+            contact.Phone.includes(SearchContacts) ||
+            Contact.Email.toLowerCase().includes(SearchContacts.toLowerCase())
+        );
 
         function onChangeName(e) {
           setNames(e.target.value);
@@ -52,6 +61,10 @@
 
         function onChangeEmail(e) {
           setEmails(e.target.value);
+        }
+
+        function onSearchContacts(e) {
+          setContacts(e.target.value);
         }
 
         function RenderUI() {
@@ -105,6 +118,8 @@
                 type="text"
                 class="form-control mb-3 w-100"
                 placeholder="Search..."
+                value={SearchContacts}
+                onChange={onSearchContacts}
               />
               <div class="row">
                 <div class="col-sm">
