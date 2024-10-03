@@ -30,31 +30,30 @@
 
       function TodoListApp() {
         // using useState is more practical and faster
-        const [Names, setNames] = React.useState("");
-        const [Phones, setPhones] = React.useState("");
-        const [Emails, setEmails] = React.useState("");
-        const [Contacts, setContacts] = React.useState([]);
-        const [EditIndex, setEditIndex] = React.useState(null);
-        const [ShowContactList, setShowContactList] = React.useState(false);
+        const [names, setnames] = React.useState("");
+        const [phones, setphones] = React.useState("");
+        const [emails, setemails] = React.useState("");
+        const [contacts, setcontacts] = React.useState([]);
+        const [editIndex, seteditIndex] = React.useState(null);
+        const [showContactList, setshowContactList] = React.useState(false);
         // const [SearchContacts, setSearchContacts] = React.useState("");
+
+        React.useEffect(() => {
+          const savedToLocal = localStorage.getItem("contacts-list");
+          if (savedToLocal) {
+            setcontacts(JSON.parse(savedToLocal));
+            setshowContactList(true);
+          }
+        }, []);
+
+        React.useEffect(() => {
+          localStorage.setItem("contacts-list", JSON.stringify(contacts));
+        }, [contacts]);
 
         // useRef replace when we do DOM in javascript
         const NameInputRef = React.useRef(null);
         const PhoneInputRef = React.useRef(null);
         const EmailInputRef = React.useRef(null);
-
-        // save to localStorage using method useEffect
-        React.useEffect(() => {
-          const storageContacts = localStorage.getItem("contacts-list");
-          if (storageContacts) {
-            setContacts(JSON.parse(storageContacts));
-            setShowContactList(true);
-          }
-        }, []);
-
-        React.useEffect(() => {
-          localStorage.setItem("contacts-list", JSON.stringify(Contacts));
-        }, [Contacts]);
 
         // // handle search
         // const filteredContacts = Contacts.filter(
@@ -67,15 +66,15 @@
         // );
 
         function onChangeName(e) {
-          setNames(e.target.value);
+          setnames(e.target.value);
         }
 
         function onChangePhone(e) {
-          setPhones(e.target.value);
+          setphones(e.target.value);
         }
 
         function onChangeEmail(e) {
-          setEmails(e.target.value);
+          setemails(e.target.value);
         }
 
         // function onSearchContacts(e) {
@@ -83,41 +82,42 @@
         // }
 
         function RenderUI() {
-          setShowContactList(true);
-          if (!Names || !Phones || !Emails) {
+          setshowContactList(true);
+          if (!names || !phones || !emails) {
             alert("harap isi bidang ini");
-          } else if (EditIndex !== null) {
-            const EditContacts = Contacts.map((contact, i) =>
-              i === EditIndex
-                ? { name: Names, phone: Phones, email: Emails }
+          } else if (editIndex !== null) {
+            const editContacts = contacts.map((contact, i) =>
+              i === editIndex
+                ? { Name: names, Phone: phones, Email: emails }
                 : contact
             );
-            setContacts(EditContacts);
-            setEditIndex(null);
+            setcontacts(editContacts);
+            seteditIndex(null);
           } else {
-            const newContact = { name: Names, phone: Phones, email: Emails };
-            setContacts([...Contacts, newContact]);
+            const newContact = { Name: names, Phone: phones, Email: emails };
+            const updateContacts = [...contacts, newContact];
+            setcontacts(updateContacts);
           }
         }
 
         function OnClickButton() {
           RenderUI();
-          setNames("");
-          setPhones("");
-          setEmails("");
+          setnames("");
+          setphones("");
+          setemails("");
         }
 
-        function OnClickContacts(index) {
-          const UpdateContacts = Contacts.filter((_, i) => i !== index);
-          setContacts(UpdateContacts);
+        function OnClickContact(index) {
+          const UpdateContacts = contacts.filter((_, i) => i !== index);
+          setcontacts(UpdateContacts);
         }
 
         function onEditClick(index) {
-          const contactToEdit = Contacts[index];
-          setNames(contactToEdit.Names);
-          setNames(contactToEdit.Phones);
-          setNames(contactToEdit.Emails);
-          setEditIndex(index);
+          const contactToEdit = contacts[index];
+          setnames(contactToEdit.names);
+          setphones(contactToEdit.phones);
+          setemails(contactToEdit.emails);
+          seteditIndex(index);
 
           NameInputRef.current.focus();
         }
@@ -141,7 +141,7 @@
                     class="form-control"
                     placeholder="Name"
                     onChange={onChangeName}
-                    value={Names}
+                    value={names}
                     ref={NameInputRef}
                   />
                 </div>
@@ -151,7 +151,7 @@
                     class="form-control"
                     placeholder="Telp"
                     onChange={onChangePhone}
-                    value={Phones}
+                    value={phones}
                     ref={PhoneInputRef}
                   />
                 </div>
@@ -161,19 +161,19 @@
                     class="form-control"
                     placeholder="Email"
                     onChange={onChangeEmail}
-                    value={Emails}
+                    value={emails}
                     ref={EmailInputRef}
                   />
                 </div>
                 <div class="col-sm">
                   <button class="btn btn-primary w-100" onClick={OnClickButton}>
                     <i class="bi bi-plus"></i>
-                    {EditIndex !== null ? "Save" : "Add"}
+                    {editIndex !== null ? "Save" : "Add"}
                   </button>
                 </div>
               </div>
 
-              {ShowContactList && (
+              {showContactList && (
                 <>
                   <h3 class="text-center mt-5">Contact List</h3>
                   <table class="table table-hover mt-5">
@@ -193,11 +193,11 @@
                     </thead>
 
                     <tbody>
-                      {Contacts.map((contact, index) => (
+                      {contacts.map((contact, index) => (
                         <tr key={index}>
-                          <td>{contact.name}</td>
-                          <td>{contact.phone}</td>
-                          <td>{contact.email}</td>
+                          <td>{contact.Name}</td>
+                          <td>{contact.Phone}</td>
+                          <td>{contact.Email}</td>
                           <td>
                             <button
                               class="btn btn-primary btn-sm mr-2"
@@ -208,7 +208,7 @@
                             </button>
                             <button
                               class="btn btn-danger btn-sm"
-                              onClick={() => OnClickContacts(index)}
+                              onClick={() => OnClickContact(index)}
                             >
                               <i class="bi bi-trash-fill pr-1"></i>
                               Delete
