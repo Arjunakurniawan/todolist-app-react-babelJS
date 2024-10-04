@@ -36,7 +36,7 @@
         const [contacts, setcontacts] = React.useState([]);
         const [editIndex, seteditIndex] = React.useState(null);
         const [showContactList, setshowContactList] = React.useState(false);
-        // const [SearchContacts, setSearchContacts] = React.useState("");
+        const [SearchContacts, setSearchContacts] = React.useState("");
 
         React.useEffect(() => {
           const savedToLocal = localStorage.getItem("contacts-list");
@@ -55,15 +55,13 @@
         const PhoneInputRef = React.useRef(null);
         const EmailInputRef = React.useRef(null);
 
-        // // handle search
-        // const filteredContacts = Contacts.filter(
-        //   (contact) =>
-        //     contact.Names.toLowerCase().includes(
-        //       SearchContacts.toLowerCase()
-        //     ) ||
-        //     contact.Phones.includes(SearchContacts) ||
-        //     contact.Emails.toLowerCase().includes(SearchContacts.toLowerCase())
-        // );
+        // handle search
+        const filterContacts = contacts.filter(
+          (contact) =>
+            contact.Name.toLowerCase().includes(SearchContacts.toLowerCase()) ||
+          contact.Phone.includes(SearchContacts) ||
+          contact.Email.includes(SearchContacts.toLowerCase())
+        );
 
         function onChangeName(e) {
           setnames(e.target.value);
@@ -77,9 +75,9 @@
           setemails(e.target.value);
         }
 
-        // function onSearchContacts(e) {
-        //   setContacts(e.target.value);
-        // }
+        function onSearchContacts(e) {
+          setSearchContacts(e.target.value);
+        }
 
         function RenderUI() {
           setshowContactList(true);
@@ -114,9 +112,9 @@
 
         function onEditClick(index) {
           const contactToEdit = contacts[index];
-          setnames(contactToEdit.names);
-          setphones(contactToEdit.phones);
-          setemails(contactToEdit.emails);
+          setnames(contactToEdit.Name);
+          setphones(contactToEdit.Phone);
+          setemails(contactToEdit.Phone);
           seteditIndex(index);
 
           NameInputRef.current.focus();
@@ -131,8 +129,8 @@
                 type="text"
                 class="form-control mb-3 w-100"
                 placeholder="Search..."
-                // value={SearchContacts}
-                // onChange={onSearchContacts}
+                value={SearchContacts}
+                onChange={onSearchContacts}
               />
               <div class="row">
                 <div class="col-sm">
@@ -193,7 +191,7 @@
                     </thead>
 
                     <tbody>
-                      {contacts.map((contact, index) => (
+                      {filterContacts.map((contact, index) => (
                         <tr key={index}>
                           <td>{contact.Name}</td>
                           <td>{contact.Phone}</td>
